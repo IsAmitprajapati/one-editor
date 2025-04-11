@@ -10,28 +10,29 @@ if(!MONGODB_URI){
 let cached = global.mongoose
 
 if(!cached){
-    cached =  global.mongoose = { conn : null , promise : null}
+   cached = global.mongoose = { conn : null , promise : null }
 }
 
 export async function connectDB(){
-    if(cached?.conn){
+    if(cached.conn){
         return cached.conn
     }
 
-    //promise is not available
-    if(!Boolean(cached?.promise)){
+    //promise connect is not available 
+    if(!cached.promise){
         const opts = {
             bufferCommands : false,
             maxPoolSize : 10
         }
-        cached.promise = mongoose.connect(MONGODB_URI,opts).then((mongoose) => mongoose.connection)
+        cached.promise = mongoose.connect(MONGODB_URI,opts).then((mongoose)=> mongoose.connection)
     }
-    
-    //promise is available 
-    try{
-        cached.conn = await cached.promise
-    }catch(error){
-        cached.promise = null 
+
+
+    //promise is available
+    try {
+        cached.conn = await cached.promise 
+    } catch (error) {
+        cached.promise = null
         throw error
     }
 }
